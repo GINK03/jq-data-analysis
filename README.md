@@ -10,3 +10,8 @@
 ```console
 $ cat ${TARGET.csv} | csv2json
 ```
+
+## csvのzip codeのみを抜き出す
+```console
+$ cat ConsumerComplaints.csv | head -n 1000 | csvtojson | jq 'map(.["Zip Code"])'
+```

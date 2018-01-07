@@ -18,7 +18,7 @@ STDIN.each_line { |line|
 }
 
 keys = buff[0].keys()
-p keys
+#p keys
 
 infers = keys.map { |key| 
   y = buff.slice(1...100).map { |it| 
@@ -32,7 +32,7 @@ infers = keys.map { |key|
     it[1]
   }
   type = y[0]
-  p key, type
+  #p key, type
   if( type  == [false, false] ) then 
     infer = "String"
   elsif(  type  == [true, false] ) then 
@@ -55,5 +55,5 @@ infers.map { |key, val|
 
 
 buff.map { |it|
-  p it
+  puts JSON.dump(it)
 }

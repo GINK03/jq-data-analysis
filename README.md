@@ -48,6 +48,16 @@ $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | 
 $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc ([]; . + [$fc] )'
 ```
 
+## shell vs jq
+### head
+```console
+$ cat vehicles.csv | head -n 10  
+```
+### jq
+```console
+$ cat vehicles.csv | conv | jq '.[:10]'
+```
+
 ## group by
 これができれば最強
 ```console

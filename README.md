@@ -1,4 +1,4 @@
-# jqとrubyでデータ分析する
+# jqでデータ分析する
 
 ## awkの代替としてのjq
 コマンドラインでのアドホック性が高い分析は時代の変化とともに、csvからxml, 最近はmsgpack, jsonなどのデータフォーマットが利用されます  
@@ -11,11 +11,16 @@ Apache HadoopやAWS EMR、Google Dataflow, Apache Beamなどで任意のシリ�
 
 
 ## jqにcsvを投入する前に前処理
+jqだけで全てが完結することをあまり期待しないほうがいいと考えています、  
+jqはPerlの様に匿名変数が多数利用できて、コードが短くかける代わりに、複雑なコードは書きづらいです  
+
+jq(場合によっては、HadoopやBeamなど)で利用するために、CSVのフォーマットをjsonに変換します  
+
+そのために今回はRubyを手続きが多い場面に利用しました
 ### CSV to JSON
 ```console
 $ cat vehicles.csv | ruby csv2json.rb 
 ```
-これは、行志向のJSONなので、このままjqで処理するには色々と制限が多いのと、型推定ができていない(CSVは型情報がないのじゃ。。。)
 
 ### 型がないJSONを適切な型にキャストする
 ```console
@@ -32,19 +37,9 @@ $ cat ${ANY_ROW_JSONS} | ruby to_list.rb
 PATH=$HOME/jq-ruby-shell-data-analysis/:$PATH
 alias conv='csv2json.rb | type_infer.rb | to_list.rb'
 ```
+これを追記することで、シェルからconvをcsvでパイプで繋ぐと、jqで処理できるようになります
 
-
-### 例
-燃料代を全てreduce関数で足し合わせてたたみこむ
-```cosnole
-$ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc (0; . + $fc)'
-```
-
-### 例: jqでreduce時にarrayにpushする
-```cosnole
-$ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc ([]; . + [$fc] )'
-```
-
+# コマンドラインの基本ツール群をjqで再現する
 ## head vs jq
 ### head
 ```console
@@ -97,6 +92,19 @@ $ cat vehicles.csv | egrep T...ta
 $ cat vehicles.csv | conv | jq '.[] | .make | select(test("T....a"))'
 ```
 
+# SQLと等価な操作の例
+よく使うSQLのパターンと等価な例をいくつか示します
+## map
+map
+```console
+$ head -n 1000 vehicles.csv | csv | jq '[{make:.[].make, barrels:.[].barrels08}]' | less
+```
+
+## filter, select
+```console
+$ head -n 1000 vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'select(.[].make == "Toyota")' | less
+```
+
 ## group by
 これができれば最強
 ```console
@@ -110,15 +118,16 @@ $ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_
 $ head -n 1000 vehicles.csv | conv | jq 'map(.make)' | jq 'group_by(.) | map({(.[0]): length}) | add'
 ```
 
-## オブジェクトのキーを限定して減らす
-selectやfilterではない.非可換のmapの一種
-```console
-$ head -n 1000 vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq '[{make:.[].make, barrels:.[].barrels08}]' | less
+
+### 例
+燃料代を全てreduce関数で足し合わせてたたみこむ
+```cosnole
+$ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc (0; . + $fc)'
 ```
 
-## filter, select
-```console
-$ head -n 1000 vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'select(.[].make == "Toyota")' | less
+### 例: jqでreduce時にarrayにpushする
+```cosnole
+$ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc ([]; . + [$fc] )'
 ```
 
 ## Listの中のObject型から、特定のキーが存在するものを選ぶ

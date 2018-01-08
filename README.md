@@ -82,6 +82,7 @@ $ cat vehicles.csv | sort -k,k
 $ cat vehicles.csv | conv | jq 'sort_by(.fuelCost08)'
 ```
 
+
 ## grep vs jq
 #### grep
 ```console
@@ -109,6 +110,12 @@ $ head -n 1000 vehicles.csv | conv | jq 'select(.[].make == "Toyota")' | less
 mapを介して評価する方法もあります
 ```console
 $ cat vehicles.csv | conv | jq 'map(select(.make == "Toyota"))' | less
+```
+
+## reduce
+燃料の全ての和をとります
+```cosnole
+$ cat vehicles.csv | conv | jq 'reduce .[].fuelCost08 as $fc (0; . + $fc)'
 ```
 
 ## group by

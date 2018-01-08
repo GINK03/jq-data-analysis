@@ -1,4 +1,14 @@
-# jqとrubyでshellでデータ分析する
+# jqとrubyでデータ分析する
+
+## awkの代替としてのjq
+コマンドラインでのアドホック性が高い分析は時代の変化とともに、csvからxml, 最近はmsgpack, jsonなどのデータフォーマットが利用されます  
+
+jsonはその生い立ちが、設計・開発されたものではなく、[JavaScriptのデータフォーマットから偶然発見された](http://www.publickey1.jp/blog/09/jsonjson.html)ものでした  
+
+Apache HadoopやAWS EMR、Google Dataflow, Apache Beamなどで任意のシリアライズ方法が利用できますが、その中でも割と一般的な技術がjsonです。　　
+
+ビッグデータで利用されてきた知見をローカルでも利用できる一つの手段としてjqと呼ばれるJavaScriptのjsonフォーマット加工に最適化されたインタプリターが利用できます
+
 
 ## jqにcsvを投入する前に前処理
 ### CSV to JSON

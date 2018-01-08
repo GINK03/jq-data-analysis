@@ -48,15 +48,28 @@ $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | 
 $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc ([]; . + [$fc] )'
 ```
 
-## shell vs jq
+## head vs jq
 ### head
 ```console
 $ cat vehicles.csv | head -n 10  
 ```
 ### jq
+スライシングの指定の仕方では途中を切り取ることもできる
 ```console
 $ cat vehicles.csv | conv | jq '.[:10]'
 ```
+
+## cut vs jq
+### cut
+```console
+$ cat vehicles.csv | cut -f1  
+```
+### jq
+フィールドをリテラルを指定できる
+```console
+$ cat vehicles.csv | conv | jq '.[].barrels08
+```
+
 
 ## group by
 これができれば最強

@@ -131,7 +131,7 @@ $ cat vehicles.csv  | conv| jq 'reduce .[].model as $model ([]; . + [$model] )'
 ```console
 $ head -n 100 vehicles.csv | conv | jq 'group_by(.make)[]'
 ```
-例えば、group byしたキーをつけてdict型にしたいときなどはこの様にシアmす
+例えば、group byしたキーをつけてdict型にしたいときなどはこの様にシェアする
 ```console
 $ cat vehicles.csv | conv | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
 ```

@@ -70,12 +70,22 @@ $ cat vehicles.csv | sort -k,k
 $ cat vehicles.csv | conv | jq 'sort_by(.fuelCost08)'
 ```
 
+## grep vs jq
+#### grep
+```console
+$ cat vehicles.csv | egrep T...ta
+```
+#### jq
+```console
+$ cat vehicles.csv | conv | jq '.[] | .make | select(test("T....a"))'
+```
+
 ## group by
 これができれば最強
 ```console
 $ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
 ```
-複数のソースを混ぜて、直積したいキーでgroup_byすればSQLにおけるSQLみたいなことができる
+複数のソースを混ぜて、直積したいキーでgroup_byすればSQLにおける直積みたいなことができる
 
 ## ex)counting uniq key frequency
 キーの出現回数をカウントする

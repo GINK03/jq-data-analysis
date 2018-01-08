@@ -127,4 +127,5 @@ $ $ cat vehicles.csv | conv  | jq 'group_by(.make) | map({(.[0].make): . }) | ad
 
 各メーカの車の燃費の平均値
 ```console
+$ cat vehicles.csv | conv  | jq 'group_by(.make) | map({(.[0].make): . }) | add | to_entries' |  jq '[.[] | { (.key): ((.value | map(.fuelCost08) | add)/(.value | length))} ] | add' | less
 ```

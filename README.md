@@ -159,3 +159,6 @@ $ cat vehicles.csv | conv | jq 'group_by(.make) | map({(.[0].make): . }) | add |
 ```console
 $ cat vehicles.csv | conv  | jq 'group_by(.make) | map({(.[0].make): . }) | add | to_entries' |  jq '[.[] | { (.key): ((.value | map(.fuelCost08) | add)/(.value | length))} ] | add' | less
 ```
+
+# まとめ
+jqはすごいのですが、データ分析におけるシェルの重要性が何度か語られますが、いずれも入力をCSVとする際の

@@ -1,3 +1,4 @@
+#! /usr/bin/env ruby
 
 require 'csv'
 require 'json'
@@ -15,7 +16,7 @@ STDIN.each_line { |line|
 }
 csvs = csvs.select { |x| x != nil }
 
-head = csvs[0]; csvs.delete(0)
+head = csvs.shift 
 
 csvs.map { |csv|
   h = head.zip(csv).to_h

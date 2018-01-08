@@ -1,4 +1,4 @@
-
+#! /usr/bin/env ruby
 require 'json'
 
 def is_int(it)

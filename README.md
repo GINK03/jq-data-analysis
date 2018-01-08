@@ -53,6 +53,7 @@ $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | 
 ```console
 $ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
 ```
+複数のソースを混ぜて、直積したいキーでgroup_byすればSQLにおけるSQLみたいなことができる
 
 ## オブジェクトのキーを限定して減らす
 selectやfilterではない.非可換のmapの一種

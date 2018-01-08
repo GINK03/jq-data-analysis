@@ -1,21 +1,28 @@
 # jqとrubyでshellでデータ分析する
 
-
-## Ruby製のCSV to JSON変換機
+## jqにcsvを投入する前に前処理
+### CSV to JSON
 ```console
 $ cat vehicles.csv | ruby csv2json.rb 
 ```
 これは、行志向のJSONなので、このままjqで処理するには色々と制限が多いのと、型推定ができていない(CSVは型情報がないのじゃ。。。)
 
-## 型がないJSONを適切な型にキャストする
+### 型がないJSONを適切な型にキャストする
 ```console
-$ cat ${SOME_ROW_JSONS} | ruby  type_infer.rb
+$ cat ${SOME_ROW_JSONS} | ruby type_infer.rb
 ```
 
-## リストにラップアップしてjqで処理できる様にする
+### リストにラップアップしてjqで処理できる様にする
 ```console
 $ cat ${ANY_ROW_JSONS} | ruby to_list.rb
 ```
+
+### 三回も変換をかけるのを面倒なので、bashrcにaliasを設定しておきます
+```console
+PATH=$HOME/jq-ruby-shell-data-analysis/:$PATH
+alias conv='csv2json.rb | type_infer.rb | to_list.rb'
+```
+
 
 ### 例
 燃料代を全てreduce関数で足し合わせてたたみこむ

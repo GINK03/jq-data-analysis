@@ -76,3 +76,6 @@ $ head -n 5000  vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | 
 ```console
 $ head -n 5000  vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'select(.[].fuelCost08)' | jq 'group_by(.make)[] | {"make":.[0].make, "sumCost":(map(.fuelCost08) | add)} ' | less 
 ```
+各メーカの車の燃費の平均値
+```console
+```

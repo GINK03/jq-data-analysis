@@ -97,7 +97,7 @@ $ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_
 ```
 複数のソースを混ぜて、直積したいキーでgroup_byすればSQLにおけるSQLみたいなことができる
 
-## counting uniq key frequency
+## ex)counting uniq key frequency
 キーの出現回数をカウントする
 ```console
 $ head -n 1000 vehicles.csv | conv | jq 'map(.make)' | jq 'group_by(.) | map({(.[0]): length}) | add'

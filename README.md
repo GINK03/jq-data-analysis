@@ -59,3 +59,8 @@ selectやfilterではない.非可換のmapの一種
 ```console
 $ head -n 1000 vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq '[{make:.[].make, barrels:.[].barrels08}]' | less
 ```
+
+## filter, select
+```console
+$ head -n 1000 vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'select(.[].make == "Toyota")' | less
+```

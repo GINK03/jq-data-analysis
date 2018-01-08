@@ -47,3 +47,9 @@ $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | 
 ```cosnole
 $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc ([]; . + [$fc] )'
 ```
+
+## group by
+これができれば最強
+```console
+$ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
+```

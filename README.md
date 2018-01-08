@@ -80,6 +80,16 @@ $ cat vehicles.csv | wc -l
 $ cat vehicles.csv | conv | jq '. | length'
 ```
 
+## sort vs jq
+#### sort
+```console
+$ cat vehicles.csv | sort -k,k
+```
+#### jq
+```console
+$ cat vehicles.csv | conv | jq 'sort_by(.fuelCost08)'
+```
+
 ## group by
 これができれば最強
 ```console

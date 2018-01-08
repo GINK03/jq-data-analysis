@@ -70,6 +70,15 @@ $ cat vehicles.csv | cut -f1
 $ cat vehicles.csv | conv | jq '.[].barrels08
 ```
 
+## wc vs jq
+#### wc
+```console
+$ cat vehicles.csv | wc -l
+```
+#### jq
+```console
+$ cat vehicles.csv | conv | jq '. | length'
+```
 
 ## group by
 これができれば最強

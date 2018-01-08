@@ -53,3 +53,9 @@ $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | 
 ```console
 $ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
 ```
+
+## オブジェクトのキーを限定して減らす
+selectやfilterではない.非可換のmapの一種
+```console
+$ head -n 1000 vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq '[{make:.[].make, barrels:.[].barrels08}]' | less
+```

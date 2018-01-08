@@ -152,7 +152,7 @@ $ cat vehicles.csv | conv | jq 'select(.[].fuelCost08)'
 例えば、車のメーカごとの燃料の総和を取るとこうなります  
 to_entriesってなんのためにあるのかわからなかったのですが、この様なデータ変換して次の処理に渡すときに便利ですね  
 ```console
-$ $ cat vehicles.csv | conv | jq 'group_by(.make) | map({(.[0].make): . }) | add | to_entries' |  jq '[.[] | { (.key): (.value | map(.fuelCost08) | add)} ] | add' | less                            
+$ cat vehicles.csv | conv | jq 'group_by(.make) | map({(.[0].make): . }) | add | to_entries' |  jq '[.[] | { (.key): (.value | map(.fuelCost08) | add)} ] | add' | less                            
 ```
 
 各メーカの車の燃費の平均値

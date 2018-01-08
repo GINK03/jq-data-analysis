@@ -124,27 +124,35 @@ $ cat vehicles.csv  | conv| jq 'reduce .[].model as $model ([]; . + [$model] )'
 ```
 
 ## group by
-これができれば最強
+ほとんどのデータ分析に置いて、group byができるかできないかが割と分かれめな気がしていますが、jqはできます
+
+基本系はこれです
+```console
+$ head -n 100 vehicles.csv | conv | jq 'group_by(.make)[]'
+```
+例えば、group byしたキーをつけてdict型にしたいときなどはこの様にシアmす
 ```console
 $ cat vehicles.csv | conv | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
 ```
-複数のソースを混ぜて、直積したいキーでgroup_byすればSQLにおける直積みたいなことができる
 
-## ex)counting uniq key frequency
-キーの出現回数をカウントする
+# Examples
+
+## Example)特定の要素をカウントする 
 ```console
-$ head -n 1000 vehicles.csv | conv | jq 'map(.make)' | jq 'group_by(.) | map({(.[0]): length}) | add'
+$ cat vehicles.csv | conv | jq 'group_by(.make) | map({(.[0].make): length}) | add'
 ```
 
-## Listの中のObject型から、特定のキーが存在するものを選ぶ
+## Example)Object型から、特定のキーが存在するものを選ぶ
+キーが存在しない要素を排除します
 ```console
-$ head -n 5000  vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'select(.[].fuelCost08)'
+$ cat vehicles.csv | conv | jq 'select(.[].fuelCost08)'
 ```
 
-## GroupByした値に対して複雑なオペレーション
-例えば、車のメーカごとの燃料の総和
+## Example)GroupByした値に対して複雑なオペレーション
+例えば、車のメーカごとの燃料の総和を取るとこうなります  
+to_entriesってなんのためにあるのかわからなかったのですが、この様なデータ変換して次の処理に渡すときに便利ですね  
 ```console
-$ $ cat vehicles.csv | conv  | jq 'group_by(.make) | map({(.[0].make): . }) | add | to_entries' |  jq '[.[] | { (.key): (.value | map(.fuelCost08) | add)} ] | add' | less                            
+$ $ cat vehicles.csv | conv | jq 'group_by(.make) | map({(.[0].make): . }) | add | to_entries' |  jq '[.[] | { (.key): (.value | map(.fuelCost08) | add)} ] | add' | less                            
 ```
 
 各メーカの車の燃費の平均値

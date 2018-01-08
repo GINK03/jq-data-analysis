@@ -42,3 +42,8 @@ $ cat ${ANY_ROW_JSONS} | ruby to_list.rb
 ```cosnole
 $ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc (0; . + $fc)'
 ```
+
+### 例: jqでreduce時にarrayにpushする
+```cosnole
+$ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc ([]; . + [$fc] )'
+```

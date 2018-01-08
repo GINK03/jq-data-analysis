@@ -117,6 +117,11 @@ $ cat vehicles.csv | conv | jq 'map(select(.make == "Toyota"))' | less
 ```cosnole
 $ cat vehicles.csv | conv | jq 'reduce .[].fuelCost08 as $fc (0; . + $fc)'
 ```
+副作用を数字以外にもListの様なオブジェクトを指定することができます  
+この例ではmodel(車種)を全てリストアップします  
+```cosnole
+$ cat vehicles.csv  | conv| jq 'reduce .[].model as $model ([]; . + [$model] )'
+```
 
 ## group by
 これができれば最強
@@ -129,11 +134,6 @@ $ cat vehicles.csv | conv | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | 
 キーの出現回数をカウントする
 ```console
 $ head -n 1000 vehicles.csv | conv | jq 'map(.make)' | jq 'group_by(.) | map({(.[0]): length}) | add'
-```
-
-### 例: jqでreduce時にarrayにpushする
-```cosnole
-$ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc ([]; . + [$fc] )'
 ```
 
 ## Listの中のObject型から、特定のキーが存在するものを選ぶ

@@ -95,20 +95,26 @@ $ cat vehicles.csv | conv | jq '.[] | .make | select(test("T....a"))'
 # SQLと等価な操作の例
 よく使うSQLのパターンと等価な例をいくつか示します
 ## map
-map
+maphは入力にList(Array)を期待して、一つ一つの要素に適応する処理を記します  
+戻り値はListです  
 ```console
-$ head -n 1000 vehicles.csv | csv | jq '[{make:.[].make, barrels:.[].barrels08}]' | less
+$ cat vehicles.csv | conv | jq 'map({"make":.make, "model":.model})' 
 ```
 
 ## filter, select
+入力のリストに対してプロパティを指定して評価
 ```console
-$ head -n 1000 vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'select(.[].make == "Toyota")' | less
+$ head -n 1000 vehicles.csv | conv | jq 'select(.[].make == "Toyota")' | less
+```
+mapを介して評価する方法もあります
+```console
+$ cat vehicles.csv | conv | jq 'map(select(.make == "Toyota"))' | less
 ```
 
 ## group by
 これができれば最強
 ```console
-$ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
+$ cat vehicles.csv | conv | jq 'group_by(.make)[] | {(.[0].make): [.[] | .]}' | less 
 ```
 複数のソースを混ぜて、直積したいキーでgroup_byすればSQLにおける直積みたいなことができる
 
@@ -116,13 +122,6 @@ $ cat vehicles.csv | ./csv2json.rb | ./type_infer.rb | ./to_list.rb | jq 'group_
 キーの出現回数をカウントする
 ```console
 $ head -n 1000 vehicles.csv | conv | jq 'map(.make)' | jq 'group_by(.) | map({(.[0]): length}) | add'
-```
-
-
-### 例
-燃料代を全てreduce関数で足し合わせてたたみこむ
-```cosnole
-$ cat vehicles.csv | ruby csv2json.rb  | ruby type_infer.rb | ruby to_list.rb | jq 'reduce .[].fuelCost08 as $fc (0; . + $fc)'
 ```
 
 ### 例: jqでreduce時にarrayにpushする

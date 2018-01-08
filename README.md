@@ -9,6 +9,7 @@ Apache HadoopやAWS EMR、Google Dataflow, Apache Beamなどで任意のシリ�
 
 ビッグデータで利用されてきた知見をローカルでも利用できる一つの手段としてjqと呼ばれるJavaScriptのjsonフォーマット加工に最適化されたインタプリターが利用できます
 
+[コードの全体はここに保存されている](https://github.com/GINK03/jq-data-analysis)ので、適宜参照利用してほしい
 
 ## jqにcsvを投入する前に前処理
 jqだけで全てが完結することをあまり期待しないほうがいいと考えています、  
